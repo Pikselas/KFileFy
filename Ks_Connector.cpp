@@ -7,6 +7,11 @@ Ks_Connector::Ks_Connector(Ks_Connector::TYPE type) : type(type) ,HasActiveConne
         WSADATA wdt;
         WSAStartup(MAKEWORD(2,2),&wdt);
    }
+
+   IsConnected = [this](){
+                return HasActiveConnection;
+            };
+            
     if(type == TYPE::SERVER)
     {
         Listen = [this](const char* Port){
@@ -42,8 +47,40 @@ Ks_Connector::Ks_Connector(Ks_Connector::TYPE type) : type(type) ,HasActiveConne
             }
 
                                 };
-            IsConnected = [this](){
-                return HasActiveConnection;
+    }
+    else
+    {
+        Connect = [this](const char* Address,const char* Port){
+                addrinfo hint,*res;
+                hint = {0};
+                hint.ai_family = AF_UNSPEC;
+                hint.ai_protocol = IPPROTO_TCP;
+                hint.ai_socktype = SOCK_STREAM;
+                if(getaddrinfo(Address,Port,&hint,&res) != 0)
+                {
+                    return;
+                }
+                else
+                {
+                    for(auto AddrInfo = res;AddrInfo != nullptr;AddrInfo = AddrInfo->ai_next)
+                    {
+                        CLIENT_SOCKET = socket(AddrInfo->ai_family,AddrInfo->ai_socktype,AddrInfo->ai_protocol);
+                        if(CLIENT_SOCKET == INVALID_SOCKET)
+                        {
+                            return;
+                        }
+                        if(connect(CLIENT_SOCKET,AddrInfo->ai_addr,AddrInfo->ai_addrlen) == SOCKET_ERROR)
+                        {
+                            closesocket(CLIENT_SOCKET);
+                            CLIENT_SOCKET = INVALID_SOCKET;
+                            return;
+                        }
+                        else
+                        {
+                            HasActiveConnection = true;
+                        }
+                    }
+                }
             };
     }
 }
