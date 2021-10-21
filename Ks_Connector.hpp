@@ -19,11 +19,17 @@ class Ks_Connector
     private:
      static int OBJCOUNT;
     private:
+     TYPE type;
+    private:
+     bool HasActiveConnection;
+    private:
      SOCKET SERVER_SOCKET;
      SOCKET CLIENT_SOCKET;
     public:
-     std::function<void(const char*)> listen = nullptr;
-     std::function<void(const char*,const char*)> connect = nullptr;
+     std::function<void(const char*)> Listen = nullptr;
+     std::function<bool()> IsConnected = nullptr;
+     std::function<void(const char*,const char*)> Connect = nullptr;
      std::function<void()> Send = nullptr;
      std::function<std::optional<std::string>()> Recive = nullptr;
+     std::function<void()> Shutdown = nullptr;
 };
