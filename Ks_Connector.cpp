@@ -42,6 +42,9 @@ Ks_Connector::Ks_Connector(Ks_Connector::TYPE type) : type(type) ,HasActiveConne
             }
 
                                 };
+            IsConnected = [this](){
+                return HasActiveConnection;
+            };
     }
 }
 Ks_Connector::~Ks_Connector()
