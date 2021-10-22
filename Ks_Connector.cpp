@@ -6,12 +6,7 @@ Ks_Connector::Ks_Connector(Ks_Connector::TYPE type) : type(type) ,HasActiveConne
    {
         WSADATA wdt;
         WSAStartup(MAKEWORD(2,2),&wdt);
-   }
-
-   IsConnected = [this](){
-                return HasActiveConnection;
-            };
-            
+   }         
     if(type == TYPE::SERVER)
     {
         Listen = [this](const char* Port){
@@ -78,11 +73,33 @@ Ks_Connector::Ks_Connector(Ks_Connector::TYPE type) : type(type) ,HasActiveConne
                         else
                         {
                             HasActiveConnection = true;
+                            break;
                         }
                     }
                 }
             };
     }
+}
+bool Ks_Connector::IsConnected() const
+{
+    return HasActiveConnection;
+}
+bool Ks_Connector::Send(std::string Data) const
+{
+    if(send(CLIENT_SOCKET,Data.c_str(),Data.length(),0) == SOCKET_ERROR)
+    {
+        return false;
+    }
+    return true;
+}
+std::optional<std::string> Ks_Connector::Recive(size_t size) const
+{
+     const auto Buffer = std::make_unique<char[]>(size);
+    if(recv(CLIENT_SOCKET,Buffer.get(),size,0) > 0)
+    {
+        return std::string(Buffer.get());
+    }
+    return {};
 }
 Ks_Connector::~Ks_Connector()
 {

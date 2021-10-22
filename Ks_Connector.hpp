@@ -3,6 +3,7 @@
 #include<WS2tcpip.h>
 #include<functional>
 #include<optional>
+#include<memory>
 #include<string>
 #pragma comment (lib, "Ws2_32.lib")
 
@@ -28,8 +29,10 @@ class Ks_Connector
      SOCKET CLIENT_SOCKET;
     public:
      std::function<void(const char*)> Listen = nullptr;
-     std::function<bool()> IsConnected = nullptr;
      std::function<void(const char*,const char*)> Connect = nullptr;
-     std::function<void()> Send = nullptr;
      std::function<void()> Shutdown = nullptr;
+    public:
+     bool IsConnected() const;
+     bool Send(std::string) const;
+     std::optional<std::string> Recive(size_t) const;
 };

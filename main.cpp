@@ -5,6 +5,13 @@ int main()
 {
     Ks_Connector kc(Ks_Connector::TYPE::SERVER);
     kc.Listen("2705");
-    std::cout<<"GotConnection";
+    if(kc.IsConnected())
+    {
+        std::cout<<"Got Connection";
+        if(kc.Send("Hello world"))
+        {
+            std::cout<<"Sent";
+        }
+    }
     return 0;
 }
