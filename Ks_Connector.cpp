@@ -76,6 +76,7 @@ Ks_Connector::Ks_Connector(Ks_Connector::TYPE type) : type(type) ,HasActiveConne
                             break;
                         }
                     }
+                    freeaddrinfo(res);
                 }
             };
     }
@@ -92,14 +93,29 @@ bool Ks_Connector::Send(std::string Data) const
     }
     return true;
 }
-std::optional<std::string> Ks_Connector::Recive(size_t size) const
+std::optional<std::string> Ks_Connector::Recive() const
 {
-     const auto Buffer = std::make_unique<char[]>(size);
-    if(recv(CLIENT_SOCKET,Buffer.get(),size,0) > 0)
+     const auto Buffer = std::make_unique<char[]>(MAX_DATA_SIZE);
+    if(recv(CLIENT_SOCKET,Buffer.get(),MAX_DATA_SIZE,0) > 0)
     {
         return std::string(Buffer.get());
     }
     return {};
+}
+void Ks_Connector::ShutDown()
+{
+    if(SERVER_SOCKET != INVALID_SOCKET)
+    {
+        closesocket(SERVER_SOCKET);
+    }
+    if(CLIENT_SOCKET != INVALID_SOCKET)
+    {
+        if(HasActiveConnection)
+        {
+            shutdown(CLIENT_SOCKET,SD_BOTH);
+        }
+        closesocket(CLIENT_SOCKET);
+    }
 }
 Ks_Connector::~Ks_Connector()
 {

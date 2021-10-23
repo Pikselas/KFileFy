@@ -24,15 +24,16 @@ class Ks_Connector
      TYPE type;
     private:
      bool HasActiveConnection;
+     size_t MAX_DATA_SIZE = 32768;
     private:
      SOCKET SERVER_SOCKET;
      SOCKET CLIENT_SOCKET;
     public:
      std::function<void(const char*)> Listen = nullptr;
      std::function<void(const char*,const char*)> Connect = nullptr;
-     std::function<void()> Shutdown = nullptr;
     public:
      bool IsConnected() const;
      bool Send(std::string) const;
-     std::optional<std::string> Recive(size_t) const;
+     std::optional<std::string> Recive() const;
+     void ShutDown();
 };

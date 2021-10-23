@@ -4,15 +4,13 @@
 int main()
 {
     Ks_Connector kc(Ks_Connector::TYPE::CLIENT);
-    kc.Connect("192.168.0.101","2705");
+    kc.Connect("127.0.0.1","2705");
     if(kc.IsConnected())
     {
-        std::cout<<"Connected";
-        auto Dt = kc.Recive(100);
-        if(Dt)
-        {
-            std::cout<<Dt.value();
-        }
+        std::cout<<kc.Recive().value();
+        kc.Send("Nope");
+        std::cout<<kc.Recive().value();
+        kc.ShutDown();
     }
     return 0;
 }

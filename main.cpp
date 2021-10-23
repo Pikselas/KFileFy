@@ -7,11 +7,10 @@ int main()
     kc.Listen("2705");
     if(kc.IsConnected())
     {
-        std::cout<<"Got Connection";
-        if(kc.Send("Hello world"))
-        {
-            std::cout<<"Sent";
-        }
+       kc.Send("hello world");
+       std::cout<<kc.Recive().value();
+       kc.Send("nande monaie");
+       kc.ShutDown();
     }
     return 0;
 }
