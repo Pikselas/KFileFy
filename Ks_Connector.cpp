@@ -85,21 +85,26 @@ bool Ks_Connector::IsConnected() const
 {
     return HasActiveConnection;
 }
-bool Ks_Connector::Send(std::string Data) const
+bool Ks_Connector::Send(std::string Data)
 {
     if(send(CLIENT_SOCKET,Data.c_str(),Data.length(),0) == SOCKET_ERROR)
     {
+        closesocket(CLIENT_SOCKET);
+        HasActiveConnection = false;
         return false;
     }
     return true;
 }
-std::optional<std::string> Ks_Connector::Recive() const
+std::optional<std::string> Ks_Connector::Recive() 
 {
      const auto Buffer = std::make_unique<char[]>(MAX_DATA_SIZE);
-    if(recv(CLIENT_SOCKET,Buffer.get(),MAX_DATA_SIZE,0) > 0)
+     int Res = recv(CLIENT_SOCKET,Buffer.get(),MAX_DATA_SIZE,0);
+    if( Res > 0)
     {
         return std::string(Buffer.get());
     }
+    HasActiveConnection = false;
+    ShutDown();
     return {};
 }
 void Ks_Connector::ShutDown()

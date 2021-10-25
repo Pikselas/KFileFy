@@ -1,16 +1,21 @@
 #include"Ks_Connector.hpp"
 #include"Ks_Connector.cpp"
 #include<iostream>
+#include<fstream>
 int main()
 {
-    Ks_Connector kc(Ks_Connector::TYPE::CLIENT);
-    kc.Connect("127.0.0.1","2705");
-    if(kc.IsConnected())
+    std::ifstream in("README.md",std::ios::binary);
+    char buff[100];
+    Ks_Connector kc(Ks_Connector::TYPE::SERVER);
+    kc.Listen("700");
+    while(in.read(buff,sizeof(buff)))
     {
-        std::cout<<kc.Recive().value();
-        kc.Send("Nope");
-        std::cout<<kc.Recive().value();
-        kc.ShutDown();
+        if(!kc.Send(buff))
+        {
+            std::cout<<"breaking";
+            break;
+        }
     }
+    kc.ShutDown();
     return 0;
 }

@@ -17,6 +17,7 @@ class Ks_Connector
         };
     public:
      Ks_Connector(TYPE type);
+     Ks_Connector(const Ks_Connector&) = delete;
      ~Ks_Connector();
     private:
      static int OBJCOUNT;
@@ -33,7 +34,7 @@ class Ks_Connector
      std::function<void(const char*,const char*)> Connect = nullptr;
     public:
      bool IsConnected() const;
-     bool Send(std::string) const;
-     std::optional<std::string> Recive() const;
+     bool Send(std::string);
+     std::optional<std::string> Recive();
      void ShutDown();
 };
