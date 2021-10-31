@@ -4,13 +4,14 @@
 #include<fstream>
 int main()
 {
-    std::ifstream in("README.md",std::ios::binary);
-    char buff[100];
+    std::fstream in("README.md");
     Ks_Connector kc(Ks_Connector::TYPE::SERVER);
     kc.Listen("700");
-    while(in.read(buff,sizeof(buff)))
+    std::string st;
+    while(std::getline(in,st))
     {
-        if(!kc.Send(buff))
+        std::cout<<st<<std::endl;
+        if(!kc.Send(st))
         {
             std::cout<<"breaking";
             break;

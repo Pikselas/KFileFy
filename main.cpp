@@ -5,6 +5,7 @@
 int main()
 {
     Ks_Connector kc(Ks_Connector::TYPE::CLIENT);
+    std::ofstream out("kl.md");
     kc.Connect("127.0.0.1","700");
     if(kc.IsConnected())
     {
@@ -13,8 +14,10 @@ int main()
            auto Data = kc.Recive();
            if(Data)
            {
-               std::cout<<Data.value();
+              out.write(Data.value().c_str(),Data.value().length());
+              out.write("\n",1);
            }
+           Data.reset();
        }
     }
     return 0;
