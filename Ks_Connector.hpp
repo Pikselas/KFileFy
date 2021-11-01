@@ -32,6 +32,7 @@ class Ks_Connector
     public:
      std::function<void(const char*)> Listen = nullptr;
      std::function<void(const char*,const char*)> Connect = nullptr;
+     std::function<std::string()> GetClientIp = nullptr;
     public:
      bool IsConnected() const;
      bool Send(std::string);

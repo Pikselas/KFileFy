@@ -42,6 +42,12 @@ Ks_Connector::Ks_Connector(Ks_Connector::TYPE type) : type(type) ,HasActiveConne
             }
 
                                 };
+        GetClientIp = [this](){
+            SOCKADDR_IN client_info = {0};
+            int addrsize = sizeof(client_info);
+            getpeername(CLIENT_SOCKET,reinterpret_cast<sockaddr*>(&client_info),&addrsize);
+            return std::string(inet_ntoa(client_info.sin_addr));
+        };
     }
     else
     {
