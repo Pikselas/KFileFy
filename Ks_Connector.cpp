@@ -30,11 +30,7 @@ Ks_Connector::Ks_Connector(Ks_Connector::TYPE type) : type(type) ,HasActiveConne
             freeaddrinfo(res);
             if(listen(SERVER_SOCKET,SOMAXCONN) != SOCKET_ERROR)
             {
-                CLIENT_SOCKET = accept(SERVER_SOCKET,nullptr,nullptr);
-                if(CLIENT_SOCKET != INVALID_SOCKET)
-                {
-                    HasActiveConnection = true;
-                }
+                
             }
             else
             {
@@ -42,6 +38,17 @@ Ks_Connector::Ks_Connector(Ks_Connector::TYPE type) : type(type) ,HasActiveConne
             }
 
                                 };
+        AllowConnection = [this]()
+                        {
+                                if(CLIENT_SOCKET == INVALID_SOCKET)
+                                {
+                                    CLIENT_SOCKET = accept(SERVER_SOCKET,nullptr,nullptr);
+                                    if(CLIENT_SOCKET != INVALID_SOCKET)
+                                    {
+                                        HasActiveConnection = true;
+                                    }
+                                }            
+                        };
         GetClientIp = [this](){
             SOCKADDR_IN client_info = {0};
             int addrsize = sizeof(client_info);
@@ -113,12 +120,8 @@ std::optional<std::string> Ks_Connector::Recive()
     ShutDown();
     return {};
 }
-void Ks_Connector::ShutDown()
+void Ks_Connector::CloseConnection()
 {
-    if(SERVER_SOCKET != INVALID_SOCKET)
-    {
-        closesocket(SERVER_SOCKET);
-    }
     if(CLIENT_SOCKET != INVALID_SOCKET)
     {
         if(HasActiveConnection)
@@ -126,6 +129,17 @@ void Ks_Connector::ShutDown()
             shutdown(CLIENT_SOCKET,SD_BOTH);
         }
         closesocket(CLIENT_SOCKET);
+        CLIENT_SOCKET = INVALID_SOCKET;
+        HasActiveConnection = false;
+    }
+}
+void Ks_Connector::ShutDown()
+{
+    CloseConnection();
+    if(SERVER_SOCKET != INVALID_SOCKET)
+    {
+        closesocket(SERVER_SOCKET);
+        SERVER_SOCKET = INVALID_SOCKET;
     }
 }
 Ks_Connector::~Ks_Connector()

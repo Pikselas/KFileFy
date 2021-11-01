@@ -6,9 +6,14 @@ int main()
 {
     Ks_Connector kc(Ks_Connector::TYPE::SERVER);
     kc.Listen("700");
-    if(kc.IsConnected())
+    while(true)
     {
-        std::cout<<kc.GetClientIp();
+        kc.AllowConnection();
+        if(kc.IsConnected())
+        {
+            std::cout<<kc.GetClientIp();
+            kc.CloseConnection();
+        }
     }
     return 0;
 }
