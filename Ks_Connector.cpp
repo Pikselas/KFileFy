@@ -117,8 +117,27 @@ std::optional<std::string> Ks_Connector::Recive()
         return std::string(Buffer.get());
     }
     HasActiveConnection = false;
-    ShutDown();
+    CloseConnection();
     return {};
+}
+std::vector<std::string> Ks_Connector::GetDeviceIps() const
+{
+    std::vector<std::string> TempAddress;
+    auto NameBuffer = std::make_unique<char[]>(MAX_HOST_LENGTH); 
+    if(gethostname(NameBuffer.get(),MAX_HOST_LENGTH) != SOCKET_ERROR)
+    {
+        hostent * hosts = gethostbyname(NameBuffer.get());
+        if(hosts != nullptr)
+        {
+            for(int i = 0;hosts->h_addr_list[i] != nullptr;i++)
+            {
+                in_addr adrs;
+                memcpy(&adrs,hosts->h_addr_list[i],sizeof(in_addr));
+                TempAddress.emplace_back(inet_ntoa(adrs));
+            }
+        }
+    }
+    return TempAddress;
 }
 void Ks_Connector::CloseConnection()
 {

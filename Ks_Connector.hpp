@@ -26,6 +26,7 @@ class Ks_Connector
     private:
      bool HasActiveConnection;
      size_t MAX_DATA_SIZE = 32768;
+     size_t MAX_HOST_LENGTH = 80;
     private:
      SOCKET SERVER_SOCKET;
      SOCKET CLIENT_SOCKET;
@@ -38,6 +39,7 @@ class Ks_Connector
      bool IsConnected() const;
      bool Send(std::string);
      std::optional<std::string> Recive();
+     std::vector<std::string> GetDeviceIps() const;
      void CloseConnection();
      void ShutDown();
 };
