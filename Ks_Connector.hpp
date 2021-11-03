@@ -17,6 +17,7 @@ class Ks_Connector
         };
     public:
      Ks_Connector(TYPE type);
+     void operator=(const Ks_Connector&) = delete;
      Ks_Connector(const Ks_Connector&) = delete;
      ~Ks_Connector();
     private:
@@ -27,6 +28,7 @@ class Ks_Connector
      bool HasActiveConnection;
      size_t MAX_DATA_SIZE = 32768;
      size_t MAX_HOST_LENGTH = 80;
+     std::string PORT;
     private:
      SOCKET SERVER_SOCKET;
      SOCKET CLIENT_SOCKET;
@@ -35,6 +37,7 @@ class Ks_Connector
      std::function<void(const char*,const char*)> Connect = nullptr;
      std::function<std::string()> GetClientIp = nullptr;
      std::function<void()> AllowConnection = nullptr;
+     std::function<std::string()> ListeningOn = nullptr; 
     public:
      bool IsConnected() const;
      bool Send(std::string);

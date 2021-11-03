@@ -10,6 +10,7 @@ Ks_Connector::Ks_Connector(Ks_Connector::TYPE type) : type(type) ,HasActiveConne
     if(type == TYPE::SERVER)
     {
         Listen = [this](const char* Port){
+            PORT = Port;
             addrinfo hint,*res;
             hint = {0};
             hint.ai_family = AF_INET;
@@ -40,7 +41,7 @@ Ks_Connector::Ks_Connector(Ks_Connector::TYPE type) : type(type) ,HasActiveConne
                                 };
         AllowConnection = [this]()
                         {
-                                if(CLIENT_SOCKET == INVALID_SOCKET)
+                                if(CLIENT_SOCKET == INVALID_SOCKET && SERVER_SOCKET != INVALID_SOCKET)
                                 {
                                     CLIENT_SOCKET = accept(SERVER_SOCKET,nullptr,nullptr);
                                     if(CLIENT_SOCKET != INVALID_SOCKET)
@@ -55,6 +56,10 @@ Ks_Connector::Ks_Connector(Ks_Connector::TYPE type) : type(type) ,HasActiveConne
             getpeername(CLIENT_SOCKET,reinterpret_cast<sockaddr*>(&client_info),&addrsize);
             return std::string(inet_ntoa(client_info.sin_addr));
         };
+       ListeningOn = [this]()
+                    {
+                      return PORT;
+                    };
     }
     else
     {
@@ -163,6 +168,7 @@ void Ks_Connector::ShutDown()
 }
 Ks_Connector::~Ks_Connector()
 {
+    ShutDown();
     if(OBJCOUNT)
     {
        OBJCOUNT--; 
