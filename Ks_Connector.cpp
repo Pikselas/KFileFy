@@ -1,7 +1,11 @@
 #include"Ks_Connector.hpp"
 int Ks_Connector::OBJCOUNT = 0;
-Ks_Connector::Ks_Connector(Ks_Connector::TYPE type) : type(type) ,HasActiveConnection(false), SERVER_SOCKET(INVALID_SOCKET) , CLIENT_SOCKET(INVALID_SOCKET)
+Ks_Connector::Ks_Connector(Ks_Connector::TYPE type)
 {
+    this->type = type;
+    HasActiveConnection = false;
+    SERVER_SOCKET = INVALID_SOCKET;
+    CLIENT_SOCKET = INVALID_SOCKET;
    if(OBJCOUNT == 0)
    {
         WSADATA wdt;
@@ -99,6 +103,10 @@ Ks_Connector::Ks_Connector(Ks_Connector::TYPE type) : type(type) ,HasActiveConne
             };
     }
 }
+Ks_Connector::Ks_Connector(TYPE type , std::function<void()> CallAble) :  Ks_Connector(type) 
+{
+    this->CallAble = CallAble;
+}
 bool Ks_Connector::IsConnected() const
 {
     return HasActiveConnection;
@@ -169,6 +177,10 @@ void Ks_Connector::ShutDown()
 }
 Ks_Connector::~Ks_Connector()
 {
+    if(CallAble != nullptr)
+    {
+        CallAble();
+    }
     ShutDown();
     if(OBJCOUNT)
     {

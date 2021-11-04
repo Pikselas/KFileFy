@@ -17,6 +17,7 @@ class Ks_Connector
         };
     public:
      Ks_Connector(TYPE type);
+     Ks_Connector(TYPE type , std::function<void()> CallAble);
      void operator=(const Ks_Connector&) = delete;
      Ks_Connector(const Ks_Connector&) = delete;
      ~Ks_Connector();
@@ -32,6 +33,8 @@ class Ks_Connector
     private:
      SOCKET SERVER_SOCKET;
      SOCKET CLIENT_SOCKET;
+    private:
+     std::function<void()> CallAble = nullptr;
     public:
      std::function<void(const char*)> Listen = nullptr;
      std::function<void(const char*,const char*)> Connect = nullptr;
@@ -42,7 +45,8 @@ class Ks_Connector
      bool IsConnected() const;
      bool Send(std::string);
      std::optional<std::string> Recive();
-     std::vector<std::string> GetDeviceIps() const;
      void CloseConnection();
      void ShutDown();
+    public:
+     std::vector<std::string> GetDeviceIps() const;
 };
