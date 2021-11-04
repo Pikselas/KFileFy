@@ -77,11 +77,10 @@ void Ks_FileTransferer::SendFile(const char * path)
                             }
                             while(MAIN_SERVER->IsConnected())
                             {
-                                if(MAIN_SERVER->Send(port + ";" + FileName))
+                                if(MAIN_SERVER->Send(port))
                                 {
                                     if(WillShare)
                                     {
-                                        FileServer->Listen(port.c_str());
                                         ActiveThreads++;
                                         std::thread([this,FileName,FileServer](){
                                             SendFileByServer(FileName,FileServer);
