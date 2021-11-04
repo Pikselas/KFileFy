@@ -8,8 +8,8 @@
 class Ks_FileTransferer
 {
   private:
-   int MAX_THREADS;
-   int ActiveThreads;
+   int MAX_THREADS = 1;
+   int ActiveThreads = 0;
   private:
     std::unique_ptr<Ks_Connector> MAIN_SERVER = nullptr;
   private:

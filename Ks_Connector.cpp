@@ -103,7 +103,7 @@ Ks_Connector::Ks_Connector(Ks_Connector::TYPE type)
             };
     }
 }
-Ks_Connector::Ks_Connector(TYPE type , std::function<void()> CallAble) :  Ks_Connector(type) 
+Ks_Connector::Ks_Connector(TYPE type , std::function<void(Ks_Connector*)> CallAble) :  Ks_Connector(type) 
 {
     this->CallAble = CallAble;
 }
@@ -179,7 +179,7 @@ Ks_Connector::~Ks_Connector()
 {
     if(CallAble != nullptr)
     {
-        CallAble();
+        CallAble(this);
     }
     ShutDown();
     if(OBJCOUNT)

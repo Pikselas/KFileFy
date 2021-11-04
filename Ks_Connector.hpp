@@ -17,7 +17,7 @@ class Ks_Connector
         };
     public:
      Ks_Connector(TYPE type);
-     Ks_Connector(TYPE type , std::function<void()> CallAble);
+     Ks_Connector(TYPE type , std::function<void(Ks_Connector*)> CallAble);
      void operator=(const Ks_Connector&) = delete;
      Ks_Connector(const Ks_Connector&) = delete;
      ~Ks_Connector();
@@ -34,7 +34,7 @@ class Ks_Connector
      SOCKET SERVER_SOCKET;
      SOCKET CLIENT_SOCKET;
     private:
-     std::function<void()> CallAble = nullptr;
+     std::function<void(Ks_Connector*)> CallAble = nullptr;
     public:
      std::function<void(const char*)> Listen = nullptr;
      std::function<void(const char*,const char*)> Connect = nullptr;
