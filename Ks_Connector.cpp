@@ -160,6 +160,7 @@ void Ks_Connector::CloseConnection()
 void Ks_Connector::ShutDown()
 {
     CloseConnection();
+    PORT.clear();
     if(SERVER_SOCKET != INVALID_SOCKET)
     {
         closesocket(SERVER_SOCKET);
