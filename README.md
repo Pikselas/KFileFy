@@ -7,11 +7,8 @@ file sharing with c++
 <h2>To do</h2>
 <ol>
 <li>
-  proper response from send file for completion
+ Design proper Ks_FileReceiver for file receiveing
 </li>
-<li>
-  need to fix for using std::bind for using it with std::async
-<li>
  <li>
    check if newly added port is already there 
  </li>
@@ -21,5 +18,6 @@ file sharing with c++
 </ol>
 <h2>MISTAKES YOU SHOULD NEVER DO</h2>
 <ul>
- <li>Always build up seperate class if it can be (don't do things like this idiot did for Ks_Connector always design seperate class for things like Server and Client)</li>
+ <li>Always build up seperate class if it can be done (don't do things like this idiot did for Ks_Connector, always design seperate class for things like Server and Client)</li>
+ <li>Must use Inhertiance if classes shares same features (or you will suffer like this a**l did)</li>
 </ul>
