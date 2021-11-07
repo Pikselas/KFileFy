@@ -13,7 +13,7 @@ file sharing with c++
    check if newly added port is already there 
  </li>
  <li>
-   add recive option
+   add receive option
  </li>
 </ol>
 <h2>MISTAKES YOU SHOULD NEVER DO</h2>
