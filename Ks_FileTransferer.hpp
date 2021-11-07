@@ -20,7 +20,7 @@ class Ks_FileTransferer
         File_Status(std::string,bool);
         ~File_Status() = default;
       public:
-        const std::pair<std::string,bool>& GetDetails() const;
+        std::pair<std::string,bool> GetDetails() const;
    };
   private:
    int MAX_THREADS = 1;

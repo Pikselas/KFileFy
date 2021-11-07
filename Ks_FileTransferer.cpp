@@ -1,6 +1,6 @@
 #include"Ks_FileTransferer.hpp"
 Ks_FileTransferer::File_Status::File_Status(std::string Name , bool Status) : details(std::make_pair(Name,Status)){}
-const std::pair<std::string,bool>& Ks_FileTransferer::File_Status::GetDetails() const
+std::pair<std::string,bool> Ks_FileTransferer::File_Status::GetDetails() const
 {
     return details;
 }
@@ -81,7 +81,6 @@ void Ks_FileTransferer::SendFile(const char * path)
                                     // and pushed to the port queue
                                     FileServer = std::make_shared<Ks_Connector>(Ks_Connector::TYPE::SERVER,[this](Ks_Connector* OBJ){
                                          AvailablePORTS.push(OBJ->ListeningOn());
-                                         std::cout<<"Calling destructor";
                                     });
                                     FileServer->Listen(port.c_str());
                                     AvailablePORTS.pop();
@@ -131,7 +130,7 @@ void Ks_FileTransferer::SendFile(const char * path)
 }
 void Ks_FileTransferer::ReceiveFile(const char * directory )
 {
-    auto&[name,type] = StatusQueue.front().get().GetDetails();
+    auto[name,type] = StatusQueue.front().get().GetDetails();
     std::cout<< QueuedFiles.size() << std::endl 
              << AvailablePORTS.size() << std::endl 
              << AvailableServers.size() << std::endl 
