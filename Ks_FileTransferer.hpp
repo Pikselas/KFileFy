@@ -9,7 +9,7 @@
 #include<future>
 class Ks_FileTransferer
 {
-  private:
+  protected:
    class File_Status
    {
       private:
@@ -22,32 +22,18 @@ class Ks_FileTransferer
       public:
         std::pair<std::string,bool> GetDetails() const;
    };
-  private:
+  protected:
    int MAX_THREADS = 1;
    int ActiveThreads = 0;
-  private:
-    std::unique_ptr<Ks_Connector> MAIN_SERVER = nullptr;
-  private:
-   std::queue<std::string> AvailablePORTS; 
+  protected:
    std::queue<std::string> QueuedFiles;
-   std::queue<std::shared_ptr<Ks_Connector>> AvailableServers;
    std::queue<std::future<File_Status>> StatusQueue;
-  public:
-    std::string LISTEN_PORT = "2144";
-    std::string FIRST_THREAD_PORT = "2145";
-  public:
-    Ks_FileTransferer();
-    ~Ks_FileTransferer();
-  private:
-    File_Status SendFileByServer(std::string ,std::shared_ptr<Ks_Connector>);
   public:
     size_t GetTotalPendings() const;
     int GetMAxThreads() const;
     int GetActiveThreads() const;
-    void IncreaseThread(const char *);
-    void DecreaseThread();
+    //virtual void DecreaseThread() = 0;
   public:
-    void SendFile(const char *);
     void ReceiveFile(const char *);
   public:
     // void Kill();

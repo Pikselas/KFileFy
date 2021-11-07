@@ -1,12 +1,11 @@
 #include<iostream>
-#include "Ks_FileTransferer.hpp"
-#include "Ks_FileTransferer.cpp"
+#include "Ks_FileSender.hpp"
+#include "Ks_FileSender.cpp"
 #include<fstream>
 int main()
 {
-  Ks_FileTransferer kfl;
-  kfl.SendFile("jg");
+  Ks_FileSender ksl;
+  ksl.SendFile("wjerhwjer");
   std::cin.get();
-  kfl.ReceiveFile("rfgr");
   return 0;
 }

@@ -19,3 +19,7 @@ file sharing with c++
    add recive option
  </li>
 </ol>
+<h2>MISTAKES YOU SHOULD NEVER DO</h2>
+<ul>
+ <li>Always build up seperate class if it can be (don't do things like this idiot did for Ks_Connector always design seperate class for things like Server and Client)</li>
+</ul>

@@ -6,8 +6,11 @@
 #include<functional>
 int main()
 {
+  std::string ip;
   Ks_Connector ks(Ks_Connector::TYPE::CLIENT);
-  ks.Connect(ks.GetDeviceIps()[0].c_str(),"2144");
+  std::cout<<"Enter IP:";
+  std::cin>>ip;
+  ks.Connect(ip.c_str(),"2144");
   if(ks.IsConnected())
   {
    while(ks.IsConnected())
@@ -16,7 +19,7 @@ int main()
      if(kData)
      {
        std::cout<<kData.value();
-        ks.Connect(ks.GetDeviceIps()[0].c_str(),kData.value().c_str());
+        ks.Connect(ip.c_str(),kData.value().c_str());
         if(ks.IsConnected())
         {
           kData = ks.Recive();
