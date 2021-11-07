@@ -1,4 +1,9 @@
 #include"Ks_FileTransferer.hpp"
+Ks_FileTransferer::File_Status::File_Status(std::string Name , bool Status) : details(std::make_pair(Name,Status)){}
+const std::pair<std::string,bool>& Ks_FileTransferer::File_Status::GetDetails() const
+{
+    return details;
+}
 Ks_FileTransferer::Ks_FileTransferer()
 {
     AvailablePORTS.push(FIRST_THREAD_PORT);
@@ -25,7 +30,7 @@ void Ks_FileTransferer::DecreaseThread()
     AvailablePORTS.pop();
     MAX_THREADS--;
 }
-void Ks_FileTransferer::SendFileByServer(std::string File,std::shared_ptr<Ks_Connector> Server)
+Ks_FileTransferer::File_Status Ks_FileTransferer::SendFileByServer(std::string File,std::shared_ptr<Ks_Connector> Server)
 {
     Server->AllowConnection();
     if(Server->IsConnected())
@@ -33,12 +38,15 @@ void Ks_FileTransferer::SendFileByServer(std::string File,std::shared_ptr<Ks_Con
         Server->Send("hey its the sub child\n");
         Server->CloseConnection();
     }
+    std::mutex mtx;
+    std::lock_guard<std::mutex> guard(mtx);
     ActiveThreads--;
     //if no file is pending then no need to keep a server alive
     if(!QueuedFiles.empty())
     {
         AvailableServers.push(Server);
     }
+    return File_Status{File,true};
 }
 void Ks_FileTransferer::SendFile(const char * path)
 {
@@ -73,6 +81,7 @@ void Ks_FileTransferer::SendFile(const char * path)
                                     // and pushed to the port queue
                                     FileServer = std::make_shared<Ks_Connector>(Ks_Connector::TYPE::SERVER,[this](Ks_Connector* OBJ){
                                          AvailablePORTS.push(OBJ->ListeningOn());
+                                         std::cout<<"Calling destructor";
                                     });
                                     FileServer->Listen(port.c_str());
                                     AvailablePORTS.pop();
@@ -90,9 +99,11 @@ void Ks_FileTransferer::SendFile(const char * path)
                                     if(WillShare)
                                     {
                                         ActiveThreads++;
-                                        std::thread([this,FileName,FileServer](){
-                                            SendFileByServer(FileName,FileServer);
-                                        }).detach();
+
+                                        //using Tserver = std::shared_ptr<Ks_Connector>;
+                                        
+                                        StatusQueue.push(std::async(std::launch::async,&Ks_FileTransferer::SendFileByServer,this,FileName,FileServer));
+
                                         if(!AvailableServers.empty())
                                         {
                                          AvailableServers.pop();
@@ -120,7 +131,11 @@ void Ks_FileTransferer::SendFile(const char * path)
 }
 void Ks_FileTransferer::ReceiveFile(const char * directory )
 {
-    std::cout<< QueuedFiles.size() << std::endl << AvailablePORTS.front() << std::endl << AvailableServers.size();
+    auto&[name,type] = StatusQueue.front().get().GetDetails();
+    std::cout<< QueuedFiles.size() << std::endl 
+             << AvailablePORTS.size() << std::endl 
+             << AvailableServers.size() << std::endl 
+             << name << std::endl << type;
 }
 Ks_FileTransferer::~Ks_FileTransferer()
 {

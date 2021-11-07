@@ -5,8 +5,8 @@
 int main()
 {
   Ks_FileTransferer kfl;
-  kfl.SendFile("akjdjkla");
+  kfl.SendFile("jg");
   std::cin.get();
-  kfl.ReceiveFile("few");
+  kfl.ReceiveFile("rfgr");
   return 0;
 }

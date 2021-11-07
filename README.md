@@ -6,15 +6,16 @@ file sharing with c++
 <h1>UNDER CONSTRUCTION</h1>
 <h2>To do</h2>
 <ol>
+<li>
+  proper response from send file for completion
+</li>
+<li>
+  need to fix for using std::bind for using it with std::async
+<li>
  <li>
-    <i>If a File server is destroyed ,the port will be pushed to Available port queue for reuse<i>
-      <p>
-         <h3>
-           can be done by:-
-         </h3>
-           <li>Creating a wrapper class of Ks_Connector</li>
-           <li>Passing additional function in Ks_Connector's constructor</li>
-           <li>Find a way how to add extra functionality for samrt pointer's destructor</li>
-      </p> 
+   check if newly added port is already there 
+ </li>
+ <li>
+   add recive option
  </li>
 </ol>
