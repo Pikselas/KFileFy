@@ -11,12 +11,14 @@ class Ks_FileSender : public Ks_FileTransferer
     private:
       File_Status SendFileByServer(std::string ,std::shared_ptr<Ks_Connector>);
     public:
-      Ks_FileSender();
+      Ks_FileSender() = default;
       ~Ks_FileSender();
     public:
       std::string LISTEN_PORT = "2144";
-      std::string FIRST_THREAD_PORT = "2145";
     public:
       void SendFile(const char *);
       void IncreaseThread(const char *);
+      void ClearServers();
+    public:
+     virtual void DecreaseThread() override;
 };

@@ -16,6 +16,13 @@ int Ks_FileTransferer::GetActiveThreads() const
 {
     return ActiveThreads;
 }
+void Ks_FileTransferer::ClearPendings()
+{
+    while(!QueuedFiles.empty())
+    {
+        QueuedFiles.pop();
+    }
+}
 void Ks_FileTransferer::ReceiveFile(const char * directory )
 {
     auto[name,type] = StatusQueue.front().get().GetDetails();

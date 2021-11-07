@@ -23,7 +23,7 @@ class Ks_FileTransferer
         std::pair<std::string,bool> GetDetails() const;
    };
   protected:
-   int MAX_THREADS = 1;
+   int MAX_THREADS = 0;
    int ActiveThreads = 0;
   protected:
    std::queue<std::string> QueuedFiles;
@@ -32,9 +32,11 @@ class Ks_FileTransferer
     size_t GetTotalPendings() const;
     int GetMAxThreads() const;
     int GetActiveThreads() const;
-    //virtual void DecreaseThread() = 0;
+  public:
+    virtual void DecreaseThread() = 0;
   public:
     void ReceiveFile(const char *);
+    void ClearPendings();
   public:
     // void Kill();
 };

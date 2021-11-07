@@ -1,8 +1,4 @@
 #include"Ks_FileSender.hpp"
-Ks_FileSender::Ks_FileSender()
-{
-    AvailablePORTS.push(FIRST_THREAD_PORT);
-}
 Ks_FileSender::~Ks_FileSender()
 {
     if(MAIN_SERVER != nullptr)
@@ -46,7 +42,7 @@ void Ks_FileSender::SendFile(const char * path)
                             std::string port;
                             std::shared_ptr<Ks_Connector> FileServer = nullptr;
                             auto FileName = QueuedFiles.front();
-                            if(!AvailablePORTS.empty())
+                            if(!AvailablePORTS.empty() || !AvailableServers.empty())
                             {
                                 WillShare = true;
                                 if(!AvailableServers.empty())
@@ -107,4 +103,24 @@ void Ks_FileSender::SendFile(const char * path)
                    }//need to research if copy and swap idom will work or not?
                 }).detach();
   }
+}
+void Ks_FileSender::ClearServers()
+{
+    while(!AvailableServers.empty())
+    {
+        AvailableServers.pop();
+    }
+}
+void Ks_FileSender::IncreaseThread(const char * port)
+{
+    AvailablePORTS.push(port);
+    MAX_THREADS++;
+}
+void Ks_FileSender::DecreaseThread()
+{
+    if(!AvailablePORTS.empty())
+    {
+        AvailablePORTS.pop();
+        MAX_THREADS--;
+    }
 }

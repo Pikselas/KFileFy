@@ -14,6 +14,20 @@ file sharing with c++
  </li>
  <li>
    add receive option
+<<<<<<< Updated upstream
+=======
+ </li>
+ <li>
+  file status => use enum instead of bool
+ </li>
+ <li>
+   Sending cancellation
+ </li>
+ <li>
+   Total file size calculation
+ </li>
+ <li>
+>>>>>>> Stashed changes
  </li>
 </ol>
 <h2>MISTAKES YOU SHOULD NEVER DO</h2>
