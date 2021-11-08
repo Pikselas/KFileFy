@@ -4,6 +4,7 @@
 #include"Ks_Connector.cpp"
 #include<memory>
 #include<queue>
+#include<vector>
 #include<thread>
 #include<mutex>
 #include<future>
@@ -26,8 +27,7 @@ class Ks_FileTransferer
    int MAX_THREADS = 0;
    int ActiveThreads = 0;
   protected:
-   std::queue<std::string> QueuedFiles;
-   std::queue<std::future<File_Status>> StatusQueue;
+   std::vector<std::future<File_Status>> StatusList;
   public:
     size_t GetTotalPendings() const;
     int GetMAxThreads() const;
@@ -36,7 +36,7 @@ class Ks_FileTransferer
     virtual void DecreaseThread() = 0;
   public:
     void ReceiveFile(const char *);
-    void ClearPendings();
+    void ClearStatus();
   public:
     // void Kill();
 };

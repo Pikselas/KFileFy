@@ -4,10 +4,11 @@
 #include<fstream>
 int main()
 {
-  Ks_FileSender ksl;
-  ksl.IncreaseThread("2146");
-  ksl.SendFile("wjerhwjer");
-  ksl.SendFile("wjerhwklejrwewjer");
-  std::cin.get();
+  Ks_FileSender kfs;
+  kfs.AddFile("ejr");
+  kfs.AddFile("mjk");
+  kfs.AddFile("kw");
+  kfs.IncreaseThread("2156");
+  kfs.StartSending();
   return 0;
 }

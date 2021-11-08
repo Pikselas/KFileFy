@@ -4,8 +4,11 @@
 class Ks_FileSender : public Ks_FileTransferer
 {
      private:
+      bool StopSending = false;
+     private:
       std::unique_ptr<Ks_Connector> MAIN_SERVER = nullptr;
      private:
+      std::queue<std::string> QueuedFiles;
       std::queue<std::string> AvailablePORTS; 
       std::queue<std::shared_ptr<Ks_Connector>> AvailableServers;
     private:
@@ -16,9 +19,13 @@ class Ks_FileSender : public Ks_FileTransferer
     public:
       std::string LISTEN_PORT = "2144";
     public:
-      void SendFile(const char *);
+      void AddFile(const char *);
+      void StartSending();
       void IncreaseThread(const char *);
+      void ClearPendings();
       void ClearServers();
+    public:
+      size_t GetTotalPendings() const;
     public:
      virtual void DecreaseThread() override;
 };
