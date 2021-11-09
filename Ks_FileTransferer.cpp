@@ -16,8 +16,3 @@ void Ks_FileTransferer::ClearStatus()
 {
     StatusList.clear();
 }
-void Ks_FileTransferer::ReceiveFile(const char * directory )
-{
-    auto[name,type] = StatusList.front().get().GetDetails();
-    std::cout << name << std::endl << type;
-}

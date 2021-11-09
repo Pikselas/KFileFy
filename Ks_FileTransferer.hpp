@@ -29,13 +29,11 @@ class Ks_FileTransferer
   protected:
    std::vector<std::future<File_Status>> StatusList;
   public:
-    size_t GetTotalPendings() const;
     int GetMAxThreads() const;
     int GetActiveThreads() const;
   public:
     virtual void DecreaseThread() = 0;
   public:
-    void ReceiveFile(const char *);
     void ClearStatus();
   public:
     // void Kill();

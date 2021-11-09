@@ -38,6 +38,7 @@ void Ks_FileSender::AddFile(const char * path)
 }
 void Ks_FileSender::StartSending()
 {
+   StopSending = false;
    MAIN_SERVER = std::make_unique<Ks_Connector>(Ks_Connector::TYPE::SERVER);
    MAIN_SERVER->Listen(LISTEN_PORT.c_str());
    while(!QueuedFiles.empty() && !StopSending)
@@ -72,11 +73,11 @@ void Ks_FileSender::StartSending()
             else
             {
                 WillShare = false;
-                port = "0"; 
+                port = "-1"; 
             }
             while(MAIN_SERVER->IsConnected())
             {
-                if(MAIN_SERVER->Send(port))
+                if(MAIN_SERVER->Send(port + ";" + FileName + std::to_string(QueuedFiles.size() - 1)))
                 {
                     if(WillShare)
                     {
