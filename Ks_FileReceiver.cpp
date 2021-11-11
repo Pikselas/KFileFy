@@ -10,28 +10,31 @@ void Ks_FileReceiver::DecreaseThread()
      MAX_THREADS--;
     }
 }
-Ks_FileReceiver::File_Status Ks_FileReceiver::ReceiveFile(const char* name, const char* ip , const char* port)
+Ks_FileReceiver::File_Status Ks_FileReceiver::ReceiveFile(std::string name,std::string ip ,std::string port)
 {
+    std::cout<<"started:" << name << std::endl << ip << std::endl << port;
     auto Connector = std::make_unique<Ks_Connector>(Ks_Connector::TYPE::CLIENT);
-    Connector->Connect(ip,port);
+    Connector->Connect(ip.c_str(),port.c_str());
     while(Connector->IsConnected())
     {
+        std::cout<<"Connected";
         auto Data = Connector->Recive();
         if(Data)
         {
             std::cout<<Data.value();
         }
     }
+    ActiveThreads--;
     return File_Status{name,true};
 }
-void Ks_FileReceiver::StartReceiving(const char * ip , const char* port,const char* path)
+void Ks_FileReceiver::StartReceiving(std::string ip , std::string port,std::string path)
 {
     MAIN_CONNECTOR = std::make_unique<Ks_Connector>(Ks_Connector::TYPE::CLIENT);
     while(!StopReceiving)
     {
         if( ActiveThreads < MAX_THREADS)
         {
-            MAIN_CONNECTOR->Connect(ip,port);
+            MAIN_CONNECTOR->Connect(ip.c_str(),port.c_str());
             if(MAIN_CONNECTOR->IsConnected())
             {
                 while(MAIN_CONNECTOR->IsConnected())
@@ -44,7 +47,9 @@ void Ks_FileReceiver::StartReceiving(const char * ip , const char* port,const ch
                        {
                            std::cout<<obj<<std::endl;
                        }
-                       ReceiveFile(ParsedData[1].c_str(),ip,ParsedData[0].c_str());
+                       std::packaged_task<Ks_FileReceiver::File_Status()> FileTask(std::bind(&Ks_FileReceiver::ReceiveFile,this,ParsedData[1],ip,ParsedData[0]));
+                       StatusList.emplace_back(FileTask.get_future());
+                       std::thread(std::move(FileTask)).detach();
                        return;
                     }
                 }

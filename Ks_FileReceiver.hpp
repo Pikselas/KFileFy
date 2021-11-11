@@ -9,9 +9,9 @@ class Ks_FileReceiver : public Ks_FileTransferer
     private:
      std::unique_ptr<Ks_Connector> MAIN_CONNECTOR = nullptr;
     private:
-     File_Status ReceiveFile(const char* , const char*,const char*);  
+     File_Status ReceiveFile(std::string ,std::string ,std::string);  
     public:
      void IncreaseThread();
      void DecreaseThread() override;
-     void StartReceiving(const char *,const char *,const char *);
+     void StartReceiving(std::string ,std::string ,std::string);
 };

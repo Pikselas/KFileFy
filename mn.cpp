@@ -6,5 +6,6 @@ int main()
   Ks_FileReceiver krs;
   krs.IncreaseThread();
   krs.StartReceiving("127.0.0.1","2144",".w/q");
+  std::cin.get();
   return 0;
 }
