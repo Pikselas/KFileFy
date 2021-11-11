@@ -6,9 +6,8 @@ int main()
 {
   Ks_FileSender kfs;
   kfs.AddFile("ejr");
-  kfs.AddFile("mjk");
-  kfs.AddFile("kw");
   kfs.IncreaseThread("2156");
   kfs.StartSending();
+  std::cin.get();
   return 0;
 }

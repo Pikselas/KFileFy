@@ -25,6 +25,7 @@ file sharing with c++
    Total file size calculation
  </li>
  <li>
+   Implement timeout systems
  </li>
 </ol>
 <h2>MISTAKES YOU SHOULD NEVER DO</h2>

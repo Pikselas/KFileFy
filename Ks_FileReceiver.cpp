@@ -12,6 +12,16 @@ void Ks_FileReceiver::DecreaseThread()
 }
 Ks_FileReceiver::File_Status Ks_FileReceiver::ReceiveFile(const char* name, const char* ip , const char* port)
 {
+    auto Connector = std::make_unique<Ks_Connector>(Ks_Connector::TYPE::CLIENT);
+    Connector->Connect(ip,port);
+    while(Connector->IsConnected())
+    {
+        auto Data = Connector->Recive();
+        if(Data)
+        {
+            std::cout<<Data.value();
+        }
+    }
     return File_Status{name,true};
 }
 void Ks_FileReceiver::StartReceiving(const char * ip , const char* port,const char* path)
@@ -29,10 +39,19 @@ void Ks_FileReceiver::StartReceiving(const char * ip , const char* port,const ch
                     auto data = MAIN_CONNECTOR->Recive();
                     if(data)
                     {
-                       
-                       break; 
+                       auto ParsedData = std::move(ksTools::split_by_delms(data.value(),";"));
+                       for(auto obj : ParsedData)
+                       {
+                           std::cout<<obj<<std::endl;
+                       }
+                       ReceiveFile(ParsedData[1].c_str(),ip,ParsedData[0].c_str());
+                       return;
                     }
                 }
+            }
+            else
+            {
+                break;
             }
         }
     }

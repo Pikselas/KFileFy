@@ -19,11 +19,10 @@ size_t Ks_FileSender::GetTotalPendings() const
 }
 Ks_FileSender::File_Status Ks_FileSender::SendFileByServer(std::string File,std::shared_ptr<Ks_Connector> Server)
 {
-    
     Server->AllowConnection();
     while(Server->IsConnected())
     {
-        Server->Send("");
+        Server->Send("hey picky");
         Server->CloseConnection();
     }
     std::mutex mtx;
@@ -77,7 +76,7 @@ void Ks_FileSender::StartSending()
             }
             while(MAIN_SERVER->IsConnected())
             {
-                if(MAIN_SERVER->Send(port + ";" + FileName + std::to_string(QueuedFiles.size() - 1)))
+                if(MAIN_SERVER->Send(port + ";" + FileName + ";" + std::to_string(QueuedFiles.size() - 1)))
                 {
                     if(WillShare)
                     {
@@ -85,8 +84,12 @@ void Ks_FileSender::StartSending()
 
                         //using Tserver = std::shared_ptr<Ks_Connector>;
                         
-                        StatusList.push_back(std::async(std::launch::async,&Ks_FileSender::SendFileByServer,this,FileName,FileServer));
-
+                        //StatusList.emplace_back(std::async(std::launch::async,&Ks_FileSender::SendFileByServer,this,FileName,FileServer));
+                        
+                        std::packaged_task<File_Status()> FileTask(std::bind(&Ks_FileSender::SendFileByServer,this,FileName,FileServer));
+                        StatusList.emplace_back(FileTask.get_future());
+                        std::thread(std::move(FileTask)).detach();
+                        
                         if(!AvailableServers.empty())
                         {
                             AvailableServers.pop();

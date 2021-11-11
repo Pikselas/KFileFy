@@ -1,6 +1,7 @@
 #pragma once
 #include "Ks_FileTransferer.hpp"
 #include "Ks_FileTransferer.cpp"
+#include "KsXstr.hpp"
 class Ks_FileReceiver : public Ks_FileTransferer
 {
     private:
