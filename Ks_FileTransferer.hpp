@@ -8,6 +8,7 @@
 #include<thread>
 #include<mutex>
 #include<future>
+#include<atomic>
 class Ks_FileTransferer
 {
   protected:
@@ -24,8 +25,8 @@ class Ks_FileTransferer
         std::pair<std::string,bool> GetDetails() const;
    };
   protected:
-   int MAX_THREADS = 0;
-   int ActiveThreads = 0;
+   std::atomic<int> MAX_THREADS = 0;
+   std::atomic<int> ActiveThreads = 0;
   protected:
    std::vector<std::future<File_Status>> StatusList;
   public:

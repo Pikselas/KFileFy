@@ -50,6 +50,7 @@ void Ks_FileReceiver::StartReceiving(std::string ip , std::string port,std::stri
                        std::packaged_task<Ks_FileReceiver::File_Status()> FileTask(std::bind(&Ks_FileReceiver::ReceiveFile,this,ParsedData[1],ip,ParsedData[0]));
                        StatusList.emplace_back(FileTask.get_future());
                        std::thread(std::move(FileTask)).detach();
+                       ActiveThreads++;
                        return;
                     }
                 }
